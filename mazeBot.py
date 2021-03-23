@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#EV3 robot
+#EV3 mazefingind robot
 # Import the necessary libraries
 import time
 import math

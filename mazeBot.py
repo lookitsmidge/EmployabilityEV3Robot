@@ -194,11 +194,14 @@ def solve_maze():
 # END OF FUNCTION DECLARATION
 # START OF CODE
 
+# THIS IS THE MAIN METHOD FOR THE ROBOT
 def main():
     print(getColour())
-    
+    print("Starting Main")
+
     while( True ):
         if ( getColour() == maze_start_colour ):
+            print("Maze Found")
             solve_maze()
         
     

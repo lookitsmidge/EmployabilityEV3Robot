@@ -194,6 +194,7 @@ def solve_maze():
 # END OF FUNCTION DECLARATION
 # START OF CODE
 
+# THIS IS THE MAIN METHOD FOR THE ROBOT
 def main():
     print(getColour())
     

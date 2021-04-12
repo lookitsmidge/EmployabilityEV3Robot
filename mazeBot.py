@@ -173,7 +173,7 @@ def turn_right_deg(percent, deg):
 
 # This function uses the gyro sensor to turn the robot left a specific amount of degrees
 def turn_left_deg(percent, deg):
-    turn_right_deg(-percent, -deg-1)
+    turn_right_deg(-percent, -deg-2) # this is so that the gyro will actually show the 90* angle in the cmd
 
 # This function defines what the robot does when in maze solving mode
 def solve_maze():

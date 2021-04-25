@@ -185,12 +185,39 @@ def solve_maze():
             speak("finished")
             stop_all_motors_brake()
             solved = True
+            turn_left_deg(20, 360)
             break
         else:
             step()
         
         #if color sensor detects ( finish colour ) - break && solved = True
+
+# This function defines the algorithm for finding the closest object to the robot   
+def closest_object():
+    speak("finding closest object")
+    gyro_sensor_in3.reset()
+    gyro_temp = gyro_sensor_in3.angle
+    closest_distance = get_distance()
+    
+    stop_all_motors_brake()
+    # time.sleep(0.1)
         
+    left_motor.on(10)
+    right_motor.on(-10)
+    while( gyro_sensor_in3.angle <= 360):
+        if( ultrasonic_sensor_in2.distance_centimeters < closest_distance):
+            closest_distance = get_distance()
+        else:
+            #do nothing
+            print("not Closer")
+        #now to turn
+        gyro_temp =+ gyro_sensor_in3.angle
+        print(gyro_temp)
+        
+    stop_all_motors_brake()
+    print("closest Object is: " + str(closest_distance))
+    speak("Closest object is: " + str(round(closest_distance, 2)) + " away")
+    full_forwards(forwards_percent, forwards_time)
 # END OF FUNCTION DECLARATION
 # START OF CODE
 
@@ -202,7 +229,10 @@ def main():
     while( True ):
         if ( getColour() == maze_start_colour ):
             print("Maze Found")
+            speak("Solving Maze")
             solve_maze()
+        elif ( getColour() == distance_get_colour ):
+            closest_object()
         
     
     # END WHILE

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#EV3 mazefingind robot
+
 # Import the necessary libraries
 import time
 import math
@@ -30,10 +30,10 @@ touch_in6 = TouchSensor(INPUT_6)
 motorC = LargeMotor(OUTPUT_C) # Magnet
 
 # VARS
-sq_distance = 30 #DEFAULT = 30
+sq_distance = 30 #DEFAULT = 30 ( actually 40cm )
 bumped = False
 turn_speed = 3 #DEFAULT = 3
-forwards_time = 2.2 # DEFAULT = 2.2
+forwards_time = 2.55 # DEFAULT = 2.2
 forwards_percent = 20 # DEFAULT = 20
 backwards_time = 1.5 # DEFAULT = 1.5
 backwards_percent = 20 # DEFAULT = 20
@@ -41,6 +41,7 @@ backwards_percent = 20 # DEFAULT = 20
 
 maze_end_colour = "Red"
 maze_start_colour = "Green"
+distance_get_colour = "Blue"
 # Function Defining
 
 # This function gets the robot to say something
@@ -99,13 +100,14 @@ def full_forwards(percent, stime):
         
         if(touch_in6.is_pressed == 1):
             full_backwards(backwards_percent, backwards_time)
+            speak("Turning Right")
             turn_right_deg(turn_speed, 90)
             break
         i += 1
         
         #END LOOP
 
-    stop_all_motors_brake()
+    #stop_all_motors_brake()
     beep(400, 0.5)
 
   
@@ -137,6 +139,7 @@ def tturn(percent, stime):
 def step():
     if( get_distance() > ( sq_distance ) ):
         # free space to left
+        speak("Turning Left")
         turn_left_deg(turn_speed, 90)
         print("turning left")
         full_forwards(forwards_percent, forwards_time)
@@ -162,7 +165,7 @@ def turn_right_deg(percent, deg):
     gyro_sensor_in3.reset()
     time.sleep(0.02)
     # BUG - sometimes skips number and never stops spinning - need to rework
-    while not gyro_sensor_in3.angle == deg+1:
+    while not gyro_sensor_in3.angle == deg + 1:
         left_motor.on(percent)
         right_motor.on(-percent)
         print("Deg: ", gyro_sensor_in3.angle)
@@ -173,7 +176,7 @@ def turn_right_deg(percent, deg):
 
 # This function uses the gyro sensor to turn the robot left a specific amount of degrees
 def turn_left_deg(percent, deg):
-    turn_right_deg(-percent, -deg-2) # this is so that the gyro will actually show the 90* angle in the cmd
+    turn_right_deg(-percent, -deg-1)
 
 # This function defines what the robot does when in maze solving mode
 def solve_maze():
@@ -182,7 +185,7 @@ def solve_maze():
     while( not solved ):
         print(getColour(), "Looking for: ", maze_end_colour )
         if getColour() == maze_end_colour:
-            speak("finished")
+            speak("Maze Complete")
             stop_all_motors_brake()
             solved = True
             turn_left_deg(20, 360)
@@ -191,7 +194,7 @@ def solve_maze():
             step()
         
         #if color sensor detects ( finish colour ) - break && solved = True
-
+      
 # This function defines the algorithm for finding the closest object to the robot   
 def closest_object():
     speak("finding closest object")
@@ -218,18 +221,17 @@ def closest_object():
     print("closest Object is: " + str(closest_distance))
     speak("Closest object is: " + str(round(closest_distance, 2)) + " away")
     full_forwards(forwards_percent, forwards_time)
+        
 # END OF FUNCTION DECLARATION
 # START OF CODE
 
-# THIS IS THE MAIN METHOD FOR THE ROBOT
+#This function is the main function
 def main():
     print(getColour())
-    print("Starting Main")
-
+    #speak("hi there")
     while( True ):
         if ( getColour() == maze_start_colour ):
-            print("Maze Found")
-            speak("Solving Maze")
+            speak("Solving maze")
             solve_maze()
         elif ( getColour() == distance_get_colour ):
             closest_object()
